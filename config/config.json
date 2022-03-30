@@ -1,0 +1,18 @@
+{
+  "development": {
+    "storage":"incidents.sqlite3",
+    "host": "localhost",
+    "dialect": "sqlite",
+    "logging": false
+  },
+  "test": {
+    "storage":"incidents.sqlite",
+    "host": "127.0.0.1",
+    "dialect": "sqlite"
+  },
+  "production": {
+    "storage":"incidents.sqlite",
+    "host": "127.0.0.1",
+    "dialect": "sqlite"
+  }
+}
