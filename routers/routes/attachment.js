@@ -26,7 +26,9 @@ const {
   getAttachments,
   getAttachmentsByIncidentId,
 } = require("../controllers/attachment");
-attachmentRouter.post("/uploads", upload.any(), createAttachment);
+// attachmentRouter.post("/uploads", upload.any(), createAttachment);
+
+attachmentRouter.post("/uploads", createAttachment);
 attachmentRouter.get("/", getAttachments);
 attachmentRouter.get("/:incidentId", getAttachmentsByIncidentId);
 module.exports = attachmentRouter;

@@ -11,15 +11,30 @@ const createComment = async (req, res) => {
 };
 const getComments = async (req, res) => {
   const id = req.params.incidentId;
+  // const { userId } = req.body;
   try {
-    const result = await Comment.findAll({ where: { incidentId: id } });
-    return res.json(result);
+    const comment = await Comment.findAll({
+      // where: { incidentId: id, userId: userId },
+      where: { incidentId: id },
+    });
+    return res.json(comment);
   } catch (err) {
-    res.status(500).json(err.message);
+    console.log(err);
+  }
+};
+const updateComments = async (req, res) => {
+  const { body } = req;
+  try {
+    const commentUpdated = await Comment.create(body);
+    console.log(commentUpdated, "commentUpdated");
+    return res.json(commentUpdated);
+  } catch (err) {
+    console.log(err);
   }
 };
 
 module.exports = {
   createComment,
   getComments,
+  updateComments,
 };

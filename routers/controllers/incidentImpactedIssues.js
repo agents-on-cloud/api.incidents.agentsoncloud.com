@@ -1,7 +1,6 @@
 const { IncidentImpactedIssue } = require("../../models/index");
 
 const createIncidentImpactedIssues = async (req, res) => {
-  console.log(Object.keys(db), "dbbb");
   const { incidentId, impactedIssueId } = req.body;
 
   try {
@@ -15,7 +14,6 @@ const createIncidentImpactedIssues = async (req, res) => {
   }
 };
 const getIncidentImpactedIssuesByIncidentId = async (req, res) => {
-  console.log(req.params, "req.params");
   const incidentId = req.params.id;
 
   try {

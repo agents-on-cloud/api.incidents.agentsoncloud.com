@@ -40,6 +40,9 @@ module.exports = {
       reference_id: {
         type: Sequelize.INTEGER,
       },
+      responder_id: {
+        type: Sequelize.INTEGER,
+      },
       deadline: {
         type: Sequelize.DATE,
       },

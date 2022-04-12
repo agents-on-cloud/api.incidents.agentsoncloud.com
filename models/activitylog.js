@@ -1,40 +1,43 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Comment extends Model {}
-  Comment.init(
+  class ActivityLog extends Model {}
+  ActivityLog.init(
     {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
+        autoIncrement: true,
       },
       incidentId: {
         type: DataTypes.INTEGER,
       },
-      comment: {
-        type: DataTypes.STRING,
-      },
       userId: {
         type: DataTypes.INTEGER,
       },
-      updated: {
+      oldValue: {
+        type: DataTypes.JSON,
+      },
+      newValue: {
+        type: DataTypes.JSON,
+      },
+      comment: {
         type: DataTypes.STRING,
       },
     },
     {
       sequelize,
-      modelName: "Comment",
-      tableName: "comment",
+      modelName: "ActivityLog",
+      tableName: "activity_log",
+      timestamps: true,
       underscored: true,
     }
   );
-  Comment.associate = (models) => {
-    Comment.incident = Comment.belongsTo(models.Incident, {
+  ActivityLog.associate = (models) => {
+    ActivityLog.incident = ActivityLog.belongsTo(models.Incident, {
       foreignKey: "incidentId",
     });
   };
-
-  return Comment;
+  return ActivityLog;
 };

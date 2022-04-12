@@ -4,12 +4,12 @@ const {
   ImpactedIssue,
   IncidentImpactedIssue,
   Assignee,
-  Responder,
+  Attachment,
+  ActivityLog,
 } = require("../../models/index");
 
 const createIncident = async (req, res, err) => {
   const { body } = req;
-  console.log(body, "body");
   try {
     const incident = await Incident.create(body);
 
@@ -34,16 +34,7 @@ const createIncident = async (req, res, err) => {
       });
       await Assignee.bulkCreate(incidentAssignee);
     }
-    if (body.responder && body.responder.length) {
-      const incidentResponder = body.assignee.map((userId) => {
-        return {
-          incidentId: incident.id,
-          userId: userId,
-        };
-      });
-      await Responder.bulkCreate(incidentResponder);
-    }
-    console.log("result", incident);
+
     res.json(incident);
   } catch (err) {
     console.log(err);
@@ -71,7 +62,7 @@ const updateState = async (req, res) => {
       },
       { where: { id: id } }
     );
-    res.json(state);
+    res.json(stateUpdated);
   } catch (err) {
     console.log(err);
   }
@@ -93,14 +84,11 @@ const getIncidentsCreatedByMe = async (req, res) => {
     const allIncident = await Incident.findAll({
       where: { creatorId: id },
       include: ImpactedIssue,
-      Assignee,
       order: [["deadline"]],
     });
-    // console.log(allIncident, "allIncidentallIncident");
     // priority = allIncident.map((incident) => {
     //   return incident.priority;
     // });
-    // console.log(priority.sort(), "this.priority");
     res.json(allIncident);
   } catch (err) {
     console.log(err);
@@ -138,7 +126,7 @@ const getIncidentById = async (req, res) => {
   try {
     const id = req.params.id;
     const incident = await Incident.findByPk(id, {
-      include: ImpactedIssue,
+      include: [ImpactedIssue, Attachment],
     });
     res.json(incident);
   } catch (err) {
@@ -149,22 +137,111 @@ const updateIncidentById = async (req, res) => {
   try {
     const id = req.params.id;
     const { body } = req;
-    console.log(body, "body", { body });
-    const incident = await Incident.findOne({ where: { id } });
-    const newIncident = await Incident.update(body, {
+    const incident = await Incident.update(body, {
       where: { id },
-      // returning: ["*"],
+      individualHooks: true,
     });
-    // console.log(newIncident, "newIncidentqqqqqqqqqqqqqqqqqq");
-    res.json({ incident: incident, newIncident: body });
+
+    if (body.impactedIssues && body.impactedIssues.length) {
+      const incidentIssues = body.impactedIssues.map((issue) => {
+        return {
+          incidentId: id,
+          impactedIssueId: issue.id,
+          item: issue.item,
+        };
+      });
+
+      await IncidentImpactedIssue.destroy({ where: { incidentId: id } });
+      await IncidentImpactedIssue.bulkCreate(incidentIssues);
+      // await IncidentImpactedIssue.update(incidentIssues, {
+      //   where: { incidentId: id },
+      // });
+    }
+
+    const impactedIssue = await ImpactedIssue.update(body.impactedIssues, {
+      where: {},
+      individualHooks: true,
+    });
+    res.json({ incident });
   } catch (err) {
     console.log(err);
   }
 };
+
+// const updateIncidentById = async (req, res) => {
+//   try {
+//     const id = req.params.id;
+//     const {
+//       creatorId,
+//       priority,
+//       subject,
+//       description,
+//       severityLevel,
+//       severityDescription,
+//       impactLevel,
+//       impactDescription,
+//       state,
+//       referenceId,
+//       responderId,
+//       deadline,
+//       type,
+//       reasonForCreation,
+//       category,
+//       escalationPolic,
+//       impactFinancial,
+//       impactOperational,
+//       impactedIssues,
+//       assignee,
+//       responder,
+//     } = req.body;
+//     const incident = await Incident.findOne({
+//       where: { id },
+//       include: ImpactedIssue,
+//     });
+//     await Incident.update(
+//       { deletedAt: 2022 - 03 - 31 },
+//       {
+//         where: { id },
+//       }
+//     );
+//     const newIncident = await Incident.create({
+//       id: id,
+//       creatorId,
+//       priority,
+//       subject,
+//       description,
+//       severityLevel,
+//       severityDescription,
+//       impactLevel,
+//       impactDescription,
+//       state,
+//       referenceId,
+//       responderId,
+//       deadline,
+//       type,
+//       reasonForCreation,
+//       category,
+//       escalationPolic,
+//       impactFinancial,
+//       impactOperational,
+//       impactedIssues,
+//       assignee,
+//       responder,
+//     });
+//     // await Incident.update({
+//     //   where: { id },
+//     // });
+//     // newIncident.dataValues.id = await id;
+//     res.json({ incident: incident, newIncident: newIncident });
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
 const getIncidentHistory = async (req, res) => {
   try {
     const incidentHistory = await Incident.findAll({
       paranoid: false,
+      include: ImpactedIssue,
     });
     res.json(incidentHistory);
   } catch (err) {

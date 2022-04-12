@@ -9,11 +9,8 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       attachment: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
       },
-      // incident_id: {
-      //   type: Sequelize.INTEGER,
-      // },
       created_at: {
         type: Sequelize.DATE,
       },

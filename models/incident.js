@@ -1,6 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
-const db = require("./index");
+
 module.exports = (sequelize, DataTypes) => {
   class Incident extends Model {}
   Incident.init(
@@ -62,6 +62,9 @@ module.exports = (sequelize, DataTypes) => {
       referenceId: {
         type: DataTypes.INTEGER,
       },
+      responderId: {
+        type: DataTypes.INTEGER,
+      },
       deadline: {
         type: DataTypes.DATE,
       },
@@ -111,10 +114,29 @@ module.exports = (sequelize, DataTypes) => {
   Incident.associate = (models) => {
     Incident.attachments = Incident.hasMany(models.Attachment);
     Incident.comments = Incident.hasMany(models.Comment);
-    // Incident.responders = Incident.hasOne(models.Responder);
+    Incident.attachments = Incident.hasMany(models.ActivityLog);
     Incident.belongsToMany(models.ImpactedIssue, {
       through: "IncidentImpactedIssue",
     });
   };
+
+  const { ActivityLog } = Incident.sequelize.models;
+  Incident.afterUpdate(async (incident, options) => {
+    const { dataValues, _previousDataValues, _changed } = incident;
+    const changed = [..._changed];
+    const newValue = {};
+    const oldValue = {};
+    const comment = `User noof update incident ${dataValues.subject}`;
+    changed.forEach((field) => {
+      newValue[field] = dataValues[field];
+      oldValue[field] = _previousDataValues[field];
+    });
+    ActivityLog.create({
+      incidentId: dataValues.id,
+      oldValue,
+      newValue,
+      comment,
+    });
+  });
   return Incident;
 };

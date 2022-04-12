@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
       },
       attachment: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
       },
       incidentId: {
         type: DataTypes.INTEGER,
