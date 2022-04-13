@@ -9,6 +9,7 @@ const incidentImpactedIssueRouter = require("./routers/routes/incidentImpactedIs
 const commentRouter = require("./routers/routes/comment");
 const userRouter = require("./routers/routes/users");
 const activityLogRouter = require("./routers/routes/activityLog");
+const responderRouter = require("./routers/routes/responder");
 
 require("dotenv").config();
 const app = express();
@@ -23,6 +24,7 @@ app.use("/incidentImpactedIssue", incidentImpactedIssueRouter);
 app.use("/comment", commentRouter);
 app.use("/user", userRouter);
 app.use("/activityLog", activityLogRouter);
+app.use("/responder", responderRouter);
 const port = process.env.PORT;
 
 app.listen(port, () => {
