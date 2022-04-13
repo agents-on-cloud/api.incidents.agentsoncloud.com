@@ -10,13 +10,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      firstName: {
-        type: DataTypes.STRING,
-      },
-      lastName: {
-        type: DataTypes.STRING,
-      },
-      email: {
+      name: {
         type: DataTypes.STRING,
       },
       createdAt: {
@@ -33,5 +27,13 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
     }
   );
+  User.associate = (models) => {
+    User.belongsToMany(models.Incident, {
+      through: "Assignee",
+    });
+    User.belongsToMany(models.Incident, {
+      through: "Responder",
+    });
+  };
   return User;
 };

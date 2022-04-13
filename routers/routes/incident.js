@@ -9,6 +9,7 @@ const {
   getIncidentsAssigneToMe,
   updateState,
   getIncidentHistory,
+  getIncidentsResponderToMe,
 } = require("../controllers/incident");
 incidentRouter.post("/", createIncident);
 incidentRouter.get("/", getAllIncident);
@@ -19,4 +20,5 @@ incidentRouter.get("/:id", getIncidentsCreatedByMe);
 incidentRouter.get("/assignee/:id", getIncidentsAssigneToMe);
 incidentRouter.patch("/state/:id", updateState);
 incidentRouter.post("/history", getIncidentHistory);
+incidentRouter.get("/responder/:id", getIncidentsResponderToMe);
 module.exports = incidentRouter;

@@ -8,6 +8,15 @@ const getUsers = async (req, res) => {
     console.log(err);
   }
 };
+const getUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const users = await User.findOne({ where: { id: id } });
+    res.json(users);
+  } catch (err) {
+    console.log(err);
+  }
+};
 const createUser = async (req, res) => {
   const { body } = req;
   try {
@@ -21,4 +30,5 @@ const createUser = async (req, res) => {
 module.exports = {
   getUsers,
   createUser,
+  getUserById,
 };

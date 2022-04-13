@@ -5,7 +5,7 @@ const {
   IncidentImpactedIssue,
   Assignee,
   Attachment,
-  ActivityLog,
+  Responder,
 } = require("../../models/index");
 
 const createIncident = async (req, res, err) => {
@@ -33,6 +33,15 @@ const createIncident = async (req, res, err) => {
         };
       });
       await Assignee.bulkCreate(incidentAssignee);
+    }
+    if (body.responder && body.responder.length) {
+      const incidentResponder = body.responder.map((id) => {
+        return {
+          incidentId: incident.id,
+          userId: id,
+        };
+      });
+      await Responder.bulkCreate(incidentResponder);
     }
 
     res.json(incident);
@@ -83,7 +92,8 @@ const getIncidentsCreatedByMe = async (req, res) => {
     const { id } = req.params;
     const allIncident = await Incident.findAll({
       where: { creatorId: id },
-      include: ImpactedIssue,
+
+      include: [ImpactedIssue, Assignee],
       order: [["deadline"]],
     });
     // priority = allIncident.map((incident) => {
@@ -113,6 +123,25 @@ const getIncidentsAssigneToMe = async (req, res) => {
     console.log(err);
   }
 };
+const getIncidentsResponderToMe = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const responder = await Responder.findAll({
+      where: { userId: id },
+    });
+    const ids = responder.map((user) => user.incidentId);
+    const incidentsResponder = await Incident.findAll({
+      where: {
+        [Op.and]: [{ id: ids }, { state: { [Op.ne]: "Closed (preventive)" } }],
+      },
+      include: ImpactedIssue,
+    });
+
+    res.json(incidentsResponder);
+  } catch (err) {
+    console.log(err);
+  }
+};
 const getAttachmentsByIncidentId = async (req, res) => {
   Incident.findAll({ where: { recordStatus: "islatest" } })
     .then((result) => {
@@ -126,7 +155,7 @@ const getIncidentById = async (req, res) => {
   try {
     const id = req.params.id;
     const incident = await Incident.findByPk(id, {
-      include: [ImpactedIssue, Attachment],
+      include: [ImpactedIssue, Attachment, Assignee],
     });
     res.json(incident);
   } catch (err) {
@@ -168,75 +197,6 @@ const updateIncidentById = async (req, res) => {
   }
 };
 
-// const updateIncidentById = async (req, res) => {
-//   try {
-//     const id = req.params.id;
-//     const {
-//       creatorId,
-//       priority,
-//       subject,
-//       description,
-//       severityLevel,
-//       severityDescription,
-//       impactLevel,
-//       impactDescription,
-//       state,
-//       referenceId,
-//       responderId,
-//       deadline,
-//       type,
-//       reasonForCreation,
-//       category,
-//       escalationPolic,
-//       impactFinancial,
-//       impactOperational,
-//       impactedIssues,
-//       assignee,
-//       responder,
-//     } = req.body;
-//     const incident = await Incident.findOne({
-//       where: { id },
-//       include: ImpactedIssue,
-//     });
-//     await Incident.update(
-//       { deletedAt: 2022 - 03 - 31 },
-//       {
-//         where: { id },
-//       }
-//     );
-//     const newIncident = await Incident.create({
-//       id: id,
-//       creatorId,
-//       priority,
-//       subject,
-//       description,
-//       severityLevel,
-//       severityDescription,
-//       impactLevel,
-//       impactDescription,
-//       state,
-//       referenceId,
-//       responderId,
-//       deadline,
-//       type,
-//       reasonForCreation,
-//       category,
-//       escalationPolic,
-//       impactFinancial,
-//       impactOperational,
-//       impactedIssues,
-//       assignee,
-//       responder,
-//     });
-//     // await Incident.update({
-//     //   where: { id },
-//     // });
-//     // newIncident.dataValues.id = await id;
-//     res.json({ incident: incident, newIncident: newIncident });
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
 const getIncidentHistory = async (req, res) => {
   try {
     const incidentHistory = await Incident.findAll({
@@ -259,4 +219,5 @@ module.exports = {
   getIncidentsAssigneToMe,
   updateState,
   getIncidentHistory,
+  getIncidentsResponderToMe,
 };
