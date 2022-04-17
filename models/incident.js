@@ -115,8 +115,14 @@ module.exports = (sequelize, DataTypes) => {
     Incident.attachments = Incident.hasMany(models.Attachment);
     Incident.comments = Incident.hasMany(models.Comment);
     Incident.attachments = Incident.hasMany(models.ActivityLog);
-    Incident.assignee = Incident.hasMany(models.Assignee);
-    Incident.responder = Incident.hasMany(models.Responder);
+    Incident.Assignees = Incident.belongsToMany(models.User, {
+      through: "Assignee",
+      as: "assignees",
+    });
+    Incident.responders = Incident.belongsToMany(models.User, {
+      through: "Responder",
+      as: "responders",
+    });
     Incident.belongsToMany(models.ImpactedIssue, {
       through: "IncidentImpactedIssue",
     });

@@ -6,6 +6,7 @@ const {
   Assignee,
   Attachment,
   Responder,
+  User,
 } = require("../../models/index");
 
 const createIncident = async (req, res, err) => {
@@ -24,7 +25,6 @@ const createIncident = async (req, res, err) => {
 
       await IncidentImpactedIssue.bulkCreate(incidentIssues);
     }
-
     if (body.assignee && body.assignee.length) {
       const incidentAssignee = body.assignee.map((id) => {
         return {
@@ -34,6 +34,8 @@ const createIncident = async (req, res, err) => {
       });
       await Assignee.bulkCreate(incidentAssignee);
     }
+
+    // await incident.setAssignees([body.assignee]);
     if (body.responder && body.responder.length) {
       const incidentResponder = body.responder.map((id) => {
         return {
@@ -93,7 +95,19 @@ const getIncidentsCreatedByMe = async (req, res) => {
     const allIncident = await Incident.findAll({
       where: { creatorId: id },
 
-      include: [ImpactedIssue, Assignee],
+      include: [
+        {
+          model: ImpactedIssue,
+        },
+        {
+          model: User,
+          as: "assignees",
+        },
+        {
+          model: User,
+          as: "responders",
+        },
+      ],
       order: [["deadline"]],
     });
     // priority = allIncident.map((incident) => {
@@ -116,7 +130,15 @@ const getIncidentsAssigneToMe = async (req, res) => {
       where: {
         [Op.and]: [{ id: ids }, { state: { [Op.ne]: "Closed (preventive)" } }],
       },
-      include: ImpactedIssue,
+      include: [
+        {
+          model: ImpactedIssue,
+        },
+        {
+          model: User,
+          as: "responders",
+        },
+      ],
     });
     res.json(incidentsAssignee);
   } catch (err) {
@@ -134,7 +156,15 @@ const getIncidentsResponderToMe = async (req, res) => {
       where: {
         [Op.and]: [{ id: ids }, { state: { [Op.ne]: "Closed (preventive)" } }],
       },
-      include: ImpactedIssue,
+      include: [
+        {
+          model: ImpactedIssue,
+        },
+        {
+          model: User,
+          as: "assignees",
+        },
+      ],
     });
 
     res.json(incidentsResponder);
