@@ -30,11 +30,11 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = (models) => {
     User.belongsToMany(models.Incident, {
       through: "Assignee",
-      // as: "assignees",
+      as: "assignees",
     });
     User.belongsToMany(models.Incident, {
       through: "Responder",
-      // as: "responders",
+      as: "responders",
     });
   };
   return User;

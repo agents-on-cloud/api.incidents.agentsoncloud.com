@@ -86,11 +86,17 @@ module.exports = (sequelize, DataTypes) => {
       impactOperational: {
         type: DataTypes.BOOLEAN,
       },
-      recordStatus: {
-        type: DataTypes.STRING,
-      },
       priority: {
         type: DataTypes.STRING,
+      },
+      secondaryAssignee: {
+        type: DataTypes.INTEGER,
+      },
+      happeningTime: {
+        type: DataTypes.DATE,
+      },
+      actionText: {
+        type: DataTypes.TEXT,
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -114,12 +120,13 @@ module.exports = (sequelize, DataTypes) => {
   Incident.associate = (models) => {
     Incident.attachments = Incident.hasMany(models.Attachment);
     Incident.comments = Incident.hasMany(models.Comment);
+    Incident.hasMany(models.Updates);
     Incident.attachments = Incident.hasMany(models.ActivityLog);
-    Incident.Assignees = Incident.belongsToMany(models.User, {
+    Incident.belongsToMany(models.User, {
       through: "Assignee",
       as: "assignees",
     });
-    Incident.responders = Incident.belongsToMany(models.User, {
+    Incident.belongsToMany(models.User, {
       through: "Responder",
       as: "responders",
     });

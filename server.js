@@ -10,6 +10,7 @@ const commentRouter = require("./routers/routes/comment");
 const userRouter = require("./routers/routes/users");
 const activityLogRouter = require("./routers/routes/activityLog");
 const responderRouter = require("./routers/routes/responder");
+const updatesRouter = require("./routers/routes/updates");
 
 require("dotenv").config();
 const app = express();
@@ -25,6 +26,7 @@ app.use("/comment", commentRouter);
 app.use("/user", userRouter);
 app.use("/activityLog", activityLogRouter);
 app.use("/responder", responderRouter);
+app.use("/updates", updatesRouter);
 const port = process.env.PORT;
 
 app.listen(port, () => {

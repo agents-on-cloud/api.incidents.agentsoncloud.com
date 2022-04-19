@@ -64,11 +64,17 @@ module.exports = {
       impact_operational: {
         type: Sequelize.BOOLEAN,
       },
-      record_status: {
-        type: Sequelize.STRING,
-      },
       priority: {
         type: Sequelize.STRING,
+      },
+      secondary_assignee: {
+        type: Sequelize.INTEGER,
+      },
+      happening_time: {
+        type: Sequelize.DATE,
+      },
+      action_text: {
+        type: Sequelize.TEXT,
       },
       created_at: {
         type: Sequelize.DATE,

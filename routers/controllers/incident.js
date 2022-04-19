@@ -65,11 +65,12 @@ const deleteIncidentById = async (req, res) => {
 };
 const updateState = async (req, res) => {
   try {
-    const { state } = req.body;
+    const { state, actionText } = req.body;
     const { id } = req.params;
     const stateUpdated = await Incident.update(
       {
         state,
+        actionText,
       },
       { where: { id: id } }
     );
@@ -185,7 +186,22 @@ const getIncidentById = async (req, res) => {
   try {
     const id = req.params.id;
     const incident = await Incident.findByPk(id, {
-      include: [ImpactedIssue, Attachment, Assignee],
+      include: [
+        {
+          model: ImpactedIssue,
+        },
+        {
+          model: Attachment,
+        },
+        {
+          model: User,
+          as: "assignees",
+        },
+        {
+          model: User,
+          as: "responders",
+        },
+      ],
     });
     res.json(incident);
   } catch (err) {
@@ -238,6 +254,21 @@ const getIncidentHistory = async (req, res) => {
     console.log(err);
   }
 };
+const addSecondaryAssignee = async (req, res) => {
+  const { secondaryAssigneeId, incidentId, deadline } = req.body;
+
+  try {
+    const secondaryAssignee = await Assignee.create(
+      { userId: secondaryAssigneeId, incidentId: incidentId },
+      {
+        where: { deadline },
+      }
+    );
+    res.json(secondAssignee, assignee);
+  } catch (err) {
+    console.log(err);
+  }
+};
 module.exports = {
   createIncident,
   deleteIncidentById,
@@ -250,4 +281,5 @@ module.exports = {
   updateState,
   getIncidentHistory,
   getIncidentsResponderToMe,
+  addSecondaryAssignee,
 };

@@ -11,10 +11,8 @@ const createComment = async (req, res) => {
 };
 const getComments = async (req, res) => {
   const id = req.params.incidentId;
-  // const { userId } = req.body;
   try {
     const comment = await Comment.findAll({
-      // where: { incidentId: id, userId: userId },
       where: { incidentId: id },
     });
     return res.json(comment);
@@ -23,11 +21,35 @@ const getComments = async (req, res) => {
   }
 };
 const updateComments = async (req, res) => {
-  const { body } = req;
+  const { comment, userId } = req.body;
+  const { id } = req.params;
   try {
-    const commentUpdated = await Comment.create(body);
-    console.log(commentUpdated, "commentUpdated");
+    const commentUpdated = await Comment.update(
+      { comment, userId },
+      {
+        where: { incidentId: id, userId: userId },
+      }
+    );
+
     return res.json(commentUpdated);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const deleteComments = async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.body;
+  try {
+    const numberOfdeleted = await Comment.destroy({
+      where: { id: id, userId: userId },
+    });
+
+    if (numberOfdeleted === 1) {
+      return res.json(id);
+    }
+
+    return res.json(null);
   } catch (err) {
     console.log(err);
   }
@@ -37,4 +59,5 @@ module.exports = {
   createComment,
   getComments,
   updateComments,
+  deleteComments,
 };
