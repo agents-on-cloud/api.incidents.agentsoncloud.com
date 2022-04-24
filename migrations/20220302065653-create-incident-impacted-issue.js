@@ -24,6 +24,9 @@ module.exports = {
       item: {
         type: Sequelize.STRING,
       },
+      impacted: {
+        type: Sequelize.BOOLEAN,
+      },
       created_at: {
         type: Sequelize.DATE,
       },

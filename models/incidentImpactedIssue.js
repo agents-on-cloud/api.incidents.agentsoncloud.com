@@ -18,6 +18,9 @@ module.exports = (sequelize, DataTypes) => {
       item: {
         type: DataTypes.STRING,
       },
+      impacted: {
+        type: DataTypes.BOOLEAN,
+      },
       createdAt: {
         type: DataTypes.DATE,
       },

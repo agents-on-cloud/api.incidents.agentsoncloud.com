@@ -13,13 +13,13 @@ const createIncident = async (req, res, err) => {
   const { body } = req;
   try {
     const incident = await Incident.create(body);
-
     if (body.impactedIssues && body.impactedIssues.length) {
       const incidentIssues = body.impactedIssues.map((issue) => {
         return {
           incidentId: incident.id,
           impactedIssueId: issue.id,
           item: issue.item,
+          impacted: issue.impacted || false,
         };
       });
 
@@ -45,7 +45,6 @@ const createIncident = async (req, res, err) => {
       });
       await Responder.bulkCreate(incidentResponder);
     }
-
     res.json(incident);
   } catch (err) {
     console.log(err);
