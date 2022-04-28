@@ -11,12 +11,13 @@ const userRouter = require("./routers/routes/users");
 const activityLogRouter = require("./routers/routes/activityLog");
 const responderRouter = require("./routers/routes/responder");
 const updatesRouter = require("./routers/routes/updates");
+const replayRouter = require("./routers/routes/replay");
 
 require("dotenv").config();
 const app = express();
 app.use(express.json());
 app.use(bodyParser.json({ limit: "50mb" }));
-// app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "50mb" }));
 app.use(cors({ origin: "*" }));
 app.use("/incident", incidentRouter);
 app.use("/attachment", attachmentRouter);
@@ -27,6 +28,7 @@ app.use("/user", userRouter);
 app.use("/activityLog", activityLogRouter);
 app.use("/responder", responderRouter);
 app.use("/updates", updatesRouter);
+app.use("/replay", replayRouter);
 const port = process.env.PORT;
 
 app.listen(port, () => {

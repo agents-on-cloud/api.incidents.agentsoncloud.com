@@ -15,12 +15,12 @@ const {
 incidentRouter.post("/", createIncident);
 incidentRouter.get("/", getAllIncident);
 incidentRouter.get("/details/:id", getIncidentById);
-incidentRouter.patch("/:id", updateIncidentById);
+incidentRouter.put("/:id", updateIncidentById);
 incidentRouter.delete("/:id", deleteIncidentById);
-incidentRouter.get("/:id", getIncidentsCreatedByMe);
+incidentRouter.get("/creator/:id", getIncidentsCreatedByMe);
 incidentRouter.get("/assignee/:id", getIncidentsAssigneToMe);
 incidentRouter.put("/state/:id", updateState);
-incidentRouter.post("/history", getIncidentHistory);
+incidentRouter.get("/history", getIncidentHistory);
 incidentRouter.get("/responder/:id", getIncidentsResponderToMe);
 incidentRouter.put("/secondaryAssignee/:id/:incidentId", addSecondaryAssignee);
 module.exports = incidentRouter;

@@ -25,10 +25,12 @@ const {
   createAttachment,
   getAttachments,
   getAttachmentsByIncidentId,
+  updateAttachmentById,
 } = require("../controllers/attachment");
 // attachmentRouter.post("/uploads", upload.any(), createAttachment);
 
 attachmentRouter.post("/uploads", createAttachment);
 attachmentRouter.get("/", getAttachments);
 attachmentRouter.get("/:incidentId", getAttachmentsByIncidentId);
+attachmentRouter.put("/:incidentId", updateAttachmentById);
 module.exports = attachmentRouter;

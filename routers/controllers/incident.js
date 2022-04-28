@@ -9,6 +9,8 @@ const {
   User,
 } = require("../../models/index");
 
+
+
 const createIncident = async (req, res, err) => {
   const { body } = req;
   try {
@@ -22,7 +24,6 @@ const createIncident = async (req, res, err) => {
           impacted: issue.impacted || false,
         };
       });
-
       await IncidentImpactedIssue.bulkCreate(incidentIssues);
     }
     if (body.assignee && body.assignee.length) {

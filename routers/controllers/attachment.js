@@ -43,9 +43,21 @@ const getAttachmentsByIncidentId = async (req, res) => {
     console.log(err);
   }
 };
+const updateAttachmentById = async (req, res) => {
+  const id = req.params;
+  let imgs = req.body.files;
+  console.log(req.body.files, "jjjjjjjjjjjjjjjj");
+  const images = await imgs.map((img) => {
+    return { incidentId, attachment: img };
+  });
+
+  await Attachment.update(images, { where: { id } });
+  res.json("OK");
+};
 
 module.exports = {
   createAttachment,
   getAttachments,
   getAttachmentsByIncidentId,
+  updateAttachmentById,
 };

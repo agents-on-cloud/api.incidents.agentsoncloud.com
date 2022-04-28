@@ -21,32 +21,36 @@ const getIncidentUpdates = async (req, res) => {
     console.log(err);
   }
 };
-// const updateComments = async (req, res) => {
-//   const { comment, userId } = req.body;
-//   const { id } = req.params;
-//   try {
-//     const commentUpdated = await Comment.update(
-//       { comment, userId },
-//       {
-//         where: { incidentId: id, userId: userId },
-//       }
-//     );
-
-//     return res.json(commentUpdated);
-//   } catch (err) {
-//     console.log(err);
-//   }
-// };
+const updateTextUpdate = async (req, res) => {
+  const { updateText, userId } = req.body;
+  const { id } = req.params;
+  console.log(req.body, "req.body");
+  try {
+    const textUpdated = await Updates.update(
+      { updateText, userId },
+      {
+        where: { id: id, userId: userId },
+      }
+    );
+    return res.json(textUpdated);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const deleteUpdate = async (req, res) => {
   const { id } = req.params;
   const { userId } = req.body;
   try {
-    const update = await Updates.destroy({
+    const numberOfdeleted = await Updates.destroy({
       where: { id: id, userId: userId },
     });
 
-    return res.json(update);
+    if (numberOfdeleted === 1) {
+      return res.json(id);
+    }
+
+    return res.json(null);
   } catch (err) {
     console.log(err);
   }
@@ -55,5 +59,6 @@ const deleteUpdate = async (req, res) => {
 module.exports = {
   createUpdates,
   getIncidentUpdates,
+  updateTextUpdate,
   deleteUpdate,
 };
