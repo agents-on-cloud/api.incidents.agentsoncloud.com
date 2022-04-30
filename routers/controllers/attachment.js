@@ -27,9 +27,11 @@ const createAttachment = async (req, res) => {
   // }
 };
 const getAttachments = async (req, res) => {
+  console.log(";;;");
   try {
     const attachments = await Attachment.findAll();
-    res.status(200).json(attachments);
+    console.log(attachments, "attachmentsattachments");
+    res.json(attachments);
   } catch (err) {
     console.log(err);
   }
