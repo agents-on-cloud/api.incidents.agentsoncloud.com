@@ -9,8 +9,6 @@ const {
   User,
 } = require("../../models/index");
 
-
-
 const createIncident = async (req, res, err) => {
   const { body } = req;
   try {
@@ -232,11 +230,33 @@ const updateIncidentById = async (req, res) => {
       //   where: { incidentId: id },
       // });
     }
+    if (body.assignee && body.assignee.length) {
+      const incidentAssignee = body.assignee.map((userId) => {
+        return {
+          incidentId: id,
+          userId: userId,
+        };
+      });
+      await Assignee.destroy({ where: { incidentId: id } });
+      await Assignee.bulkCreate(incidentAssignee);
+    }
+    if (body.responder && body.responder.length) {
+      const incidentResponder = body.responder.map((userId) => {
+        console.log(incident, id, userId, ":::::::::::::::::::");
 
-    const impactedIssue = await ImpactedIssue.update(body.impactedIssues, {
-      where: {},
-      individualHooks: true,
-    });
+        return {
+          incidentId: id,
+          userId: userId,
+        };
+      });
+      await Responder.destroy({ where: { incidentId: id } });
+      await Responder.bulkCreate(incidentResponder);
+    }
+
+    // const impactedIssue = await ImpactedIssue.update(body.impactedIssues, {
+    //   where: {},
+    //   individualHooks: true,
+    // });
     res.json({ incident });
   } catch (err) {
     console.log(err);
