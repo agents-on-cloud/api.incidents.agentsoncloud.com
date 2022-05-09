@@ -1,3 +1,4 @@
+const { Stats } = require("fs");
 const { Op } = require("sequelize");
 const {
   Incident,
@@ -7,6 +8,7 @@ const {
   Attachment,
   Responder,
   User,
+  State,
 } = require("../../models/index");
 
 const createIncident = async (req, res, err) => {
@@ -63,19 +65,21 @@ const deleteIncidentById = async (req, res) => {
 };
 const updateState = async (req, res) => {
   try {
-    const { state, reasonOnHold, actionCorrective, actionPreventive } =
-      req.body;
+    const { state, actionText } = req.body;
     const { id } = req.params;
     const stateUpdated = await Incident.update(
       {
         state,
-        reasonOnHold,
-        actionCorrective,
-        actionPreventive,
       },
       { where: { id: id } }
     );
-    res.json(stateUpdated);
+    const stateIncident = await State.bulkCreate({
+      state,
+      incidentId: id,
+      actionText,
+    });
+
+    res.json(stateUpdated, stateIncident);
   } catch (err) {
     console.log(err);
   }
