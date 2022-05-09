@@ -95,15 +95,6 @@ module.exports = (sequelize, DataTypes) => {
       happeningTime: {
         type: DataTypes.DATE,
       },
-      reasonOnHold: {
-        type: DataTypes.TEXT,
-      },
-      actionCorrective: {
-        type: DataTypes.TEXT,
-      },
-      actionPreventive: {
-        type: DataTypes.TEXT,
-      },
       createdAt: {
         type: DataTypes.DATE,
       },

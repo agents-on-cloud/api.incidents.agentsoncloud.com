@@ -63,12 +63,15 @@ const deleteIncidentById = async (req, res) => {
 };
 const updateState = async (req, res) => {
   try {
-    const { state, actionText } = req.body;
+    const { state, reasonOnHold, actionCorrective, actionPreventive } =
+      req.body;
     const { id } = req.params;
     const stateUpdated = await Incident.update(
       {
         state,
-        actionText,
+        reasonOnHold,
+        actionCorrective,
+        actionPreventive,
       },
       { where: { id: id } }
     );
@@ -127,7 +130,7 @@ const getIncidentsAssigneToMe = async (req, res) => {
     const ids = assignee.map((user) => user.incidentId);
     const incidentsAssignee = await Incident.findAll({
       where: {
-        [Op.and]: [{ id: ids }, { state: { [Op.ne]: "Closed (preventive)" } }],
+        [Op.and]: [{ id: ids }, { state: { [Op.ne]: "Closed" } }],
       },
       include: [
         {
