@@ -73,7 +73,13 @@ module.exports = {
       happening_time: {
         type: Sequelize.DATE,
       },
-      action_text: {
+      reason_on_hold: {
+        type: Sequelize.TEXT,
+      },
+      action_corrective: {
+        type: Sequelize.TEXT,
+      },
+      action_preventive: {
         type: Sequelize.TEXT,
       },
       created_at: {

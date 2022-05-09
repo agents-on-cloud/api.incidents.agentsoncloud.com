@@ -11,6 +11,7 @@ const {
   getIncidentHistory,
   getIncidentsResponderToMe,
   addSecondaryAssignee,
+  deleteAssignee,
 } = require("../controllers/incident");
 incidentRouter.post("/", createIncident);
 incidentRouter.get("/", getAllIncident);
@@ -23,4 +24,5 @@ incidentRouter.put("/state/:id", updateState);
 incidentRouter.get("/history", getIncidentHistory);
 incidentRouter.get("/responder/:id", getIncidentsResponderToMe);
 incidentRouter.put("/secondaryAssignee/:id/:incidentId", addSecondaryAssignee);
+incidentRouter.delete("/assignee/:id", deleteAssignee);
 module.exports = incidentRouter;

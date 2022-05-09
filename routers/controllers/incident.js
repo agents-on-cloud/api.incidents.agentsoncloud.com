@@ -284,7 +284,18 @@ const addSecondaryAssignee = async (req, res) => {
         where: { deadline },
       }
     );
-    res.json(secondAssignee, assignee);
+    res.json(secondaryAssignee);
+  } catch (err) {
+    console.log(err);
+  }
+};
+const deleteAssignee = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const assignee = await Assignee.destroy({
+      where: { id },
+    });
+    res.json(assignee);
   } catch (err) {
     console.log(err);
   }
@@ -302,4 +313,5 @@ module.exports = {
   getIncidentHistory,
   getIncidentsResponderToMe,
   addSecondaryAssignee,
+  deleteAssignee,
 };
