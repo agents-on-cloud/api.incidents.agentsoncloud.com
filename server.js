@@ -12,6 +12,7 @@ const activityLogRouter = require("./routers/routes/activityLog");
 const responderRouter = require("./routers/routes/responder");
 const updatesRouter = require("./routers/routes/updates");
 const replayRouter = require("./routers/routes/replay");
+const stateRouter = require("./routers/routes/state");
 
 require("dotenv").config();
 const app = express();
@@ -29,6 +30,7 @@ app.use("/activityLog", activityLogRouter);
 app.use("/responder", responderRouter);
 app.use("/updates", updatesRouter);
 app.use("/replay", replayRouter);
+app.use("/state", stateRouter);
 const port = process.env.PORT;
 
 app.listen(port, () => {

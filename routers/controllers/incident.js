@@ -1,4 +1,3 @@
-const { Stats } = require("fs");
 const { Op } = require("sequelize");
 const {
   Incident,
@@ -65,7 +64,7 @@ const deleteIncidentById = async (req, res) => {
 };
 const updateState = async (req, res) => {
   try {
-    const { state, actionText } = req.body;
+    const { state } = req.body;
     const { id } = req.params;
     const stateUpdated = await Incident.update(
       {
@@ -73,15 +72,11 @@ const updateState = async (req, res) => {
       },
       { where: { id: id } }
     );
-    const stateIncident = await State.bulkCreate({
-      state,
-      incidentId: id,
-      actionText,
-    });
 
-    res.json(stateUpdated, stateIncident);
+    res.json(stateUpdated);
   } catch (err) {
     console.log(err);
+    res.status(500).json(err.message);
   }
 };
 const getAllIncident = async (req, res) => {
