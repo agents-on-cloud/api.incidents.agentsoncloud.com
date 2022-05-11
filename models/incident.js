@@ -95,6 +95,9 @@ module.exports = (sequelize, DataTypes) => {
       happeningTime: {
         type: DataTypes.DATE,
       },
+      sendToAssignee: {
+        type: DataTypes.BOOLEAN,
+      },
       createdAt: {
         type: DataTypes.DATE,
       },

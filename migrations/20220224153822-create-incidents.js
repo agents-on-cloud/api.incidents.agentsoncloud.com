@@ -73,7 +73,9 @@ module.exports = {
       happening_time: {
         type: Sequelize.DATE,
       },
-
+      send_to_assignee: {
+        type: Sequelize.BOOLEAN,
+      },
       created_at: {
         type: Sequelize.DATE,
       },

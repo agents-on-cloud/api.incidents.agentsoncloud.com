@@ -16,6 +16,34 @@ const addState = async (req, res) => {
     console.log(err);
   }
 };
+const getStateByIncidentId = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const allState = await State.findAll({
+      where: { incidentId: id },
+    });
+
+    res.json(allState);
+  } catch (err) {
+    console.log(err);
+  }
+};
+const getStateResolved = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const stateResolved = await State.findAll({
+      where: { incidentId: id, state: "Resolved" },
+    });
+
+    res.json(stateResolved);
+  } catch (err) {
+    console.log(err);
+  }
+};
 module.exports = {
   addState,
+  getStateByIncidentId,
+  getStateResolved,
 };

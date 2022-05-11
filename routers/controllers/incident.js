@@ -8,6 +8,7 @@ const {
   Responder,
   User,
   State,
+  Updates,
 } = require("../../models/index");
 
 const createIncident = async (req, res, err) => {
@@ -201,6 +202,9 @@ const getIncidentById = async (req, res) => {
           model: User,
           as: "responders",
         },
+        // {
+        //   model: Updates,
+        // },
       ],
     });
     res.json(incident);

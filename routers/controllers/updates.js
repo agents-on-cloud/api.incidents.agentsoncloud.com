@@ -15,6 +15,7 @@ const getIncidentUpdates = async (req, res) => {
   try {
     const incidentUpdates = await Updates.findAll({
       where: { incidentId: id },
+      order: [["createdAt", "DESC"]],
     });
     return res.json(incidentUpdates);
   } catch (err) {
