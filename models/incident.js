@@ -139,13 +139,17 @@ module.exports = (sequelize, DataTypes) => {
   Incident.afterUpdate(async (incident, options) => {
     const { dataValues, _previousDataValues, _changed } = incident;
     const changed = [..._changed];
+    console.log({ changed });
     const newValue = {};
     const oldValue = {};
     const comment = `User noof update incident ${dataValues.subject}`;
     changed.forEach((field) => {
-      newValue[field] = dataValues[field];
-      oldValue[field] = _previousDataValues[field];
+      if (field !== "updatedAt") {
+        newValue[field] = dataValues[field];
+        oldValue[field] = _previousDataValues[field];
+      }
     });
+    console.log({ newValue, oldValue });
     ActivityLog.create({
       incidentId: dataValues.id,
       oldValue,
