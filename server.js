@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const { sequelize } = require("./models");
+sequelize.sync({ force: true }).then(() => {
+  console.log("DB successfully");
+});
 const bodyParser = require("body-parser");
 const incidentRouter = require("./routers/routes/incident");
 const attachmentRouter = require("./routers/routes/attachment");

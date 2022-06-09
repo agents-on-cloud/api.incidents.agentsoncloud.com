@@ -1,8 +1,11 @@
 {
   "development": {
-    "storage":"incidents.sqlite3",
-    "host": "localhost",
-    "dialect": "sqlite",
+    "username": "dev",
+    "password": "Dev@r00t",
+    "database": "Incidents",
+    "host": "192.81.217.171",
+    "dialect": "mysql",
+    "port":"50062",
     "logging": false
   },
   "test": {
